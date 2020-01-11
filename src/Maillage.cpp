@@ -13,18 +13,24 @@ std::vector<double> Maillage::unifdiv(double a, long long unsigned N) {
 
     res.push_back(0);
 
-    for (int i = 1; i < N-1; i++) {
+    for (int i = 1; i < N; i++) {
         res.push_back((a/(N-1)) + res[i-1]);
     }
 
-    res.push_back(a);
 
     return res;
 
 }
 double Maillage :: numgb(u64 N, u64 M, u64 i, u64 j)
 {
-  return 0.;
+  if (i <= N && i >= 0 && j >= 0 && j <= M) {
+    return (j) * N + i;
+  }
+  else
+  {
+    std::cout << "Numgb call not permited inputs, change please" << '\n';
+    return -1.;
+  }
 }
 
 

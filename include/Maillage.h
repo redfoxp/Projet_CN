@@ -17,6 +17,7 @@ public:
 
     std::vector<double> unifdiv(double a, u64 N);
     double numgb(u64 N, u64 M, u64 i, u64 j);
+    
     void print();
 
     ~Maillage(){}

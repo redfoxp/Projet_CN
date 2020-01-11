@@ -8,10 +8,10 @@
 
 #ifndef CONSTANT
 #define CONSTANT
-#define a 10
-#define b 10
-#define N 10
-#define M 10
+#define a 5
+#define b 5
+#define N 5
+#define M 5
 
 #endif
 
@@ -27,13 +27,16 @@ int main(int argc, char const *argv[]) {
 
   m.print();
   m.numgb(N,M,2,2);
-  std::cout << "s : " << m.numgb(N,M,1,1) << " pour i : "<<1 << "  j : " << 1 << '\n';
 
-  for (size_t i = 0; i < N; i++) {
-    for (size_t j = 0; j < M; j++) {
+  for (size_t j = 0; j < M; j++) {
+    for (size_t i = 0; i < N; i++) {
       s.push_back(m.numgb(N,M,i,j));
+      std::cout << m.numgb(N,M,i,j) << " " ;
+
     }
+    std::cout << "" << '\n';
   }
+
 
   matplotlibcpp :: figure_size(1024,720);
   matplotlibcpp :: plot(s,"+");

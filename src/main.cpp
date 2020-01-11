@@ -11,7 +11,7 @@ int main(int argc, char const *argv[]) {
 
   Maillage m;
 
-  m.x = m.unifdiv(13.4, 10);
+  m.x = m.unifdiv(10, 10);
   m.y = m.unifdiv(6.4, 3);
 
   m.print();

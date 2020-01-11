@@ -13,8 +13,8 @@ std::vector<double> Maillage::unifdiv(double a, double N) {
 
     res.push_back(0);
 
-    for (int i = 0; i < N-2; i++) {
-        res.push_back((a/N) * (i+1));
+    for (int i = 1; i < N-1; i++) {
+        res.push_back((a/(N-1)) + res[i-1]);
     }    
 
     res.push_back(a);

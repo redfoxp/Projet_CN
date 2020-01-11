@@ -31,11 +31,11 @@ run:
 	./$(TARGET)
 
 atom:
-	atom ./src/*.c
+	atom ./src/*.$(SRCEXT)
 	atom ./include/*.h
 
 indent:
-	indent ./src/*.c
+	indent ./src/*.$(SRCEXT)
 	indent ./include/*.h
 
 clean:

@@ -19,6 +19,7 @@ int main(int argc, char const *argv[]) {
 
   std::cout << "Hello CN" << std::endl;
   std::vector<double> s;
+  std::vector<double> k;
 
   Maillage m;
 
@@ -26,14 +27,18 @@ int main(int argc, char const *argv[]) {
   m.y = m.unifdiv(b, M);
 
   m.print();
-  m.numint(N,M,2,2);
-  std::cout << "s : " << m.numint(N,M,1,1) << " pour i : "<< 1 << "  j : " << 1 << '\n';
+  std::cout << "K : points interieur " << '\n';
+  for (int j = 1; j < M-1; j++){
+    for (int i = 1; i < N-1; i++)  {
+      k.push_back(m.numint(N,M,i,j));
+      std::cout << m.numint(N,M,i,j) << " " ;
 
-  for (size_t j = 1; j < M-1; j++){
-    for (size_t i = 1; i < N-1; i++)  {
-      s.push_back(m.numint(N,M,i,j));
-  m.numgb(N,M,2,2);
+    }
+    std::cout << "" << '\n';
 
+  }
+
+std::cout << "S : points global " << '\n';
   for (size_t j = 0; j < M; j++) {
     for (size_t i = 0; i < N; i++) {
       s.push_back(m.numgb(N,M,i,j));
@@ -43,12 +48,11 @@ int main(int argc, char const *argv[]) {
     std::cout << "" << '\n';
   }
 
-
   matplotlibcpp :: figure_size(1024,720);
+  matplotlibcpp :: plot(k,"o");
   matplotlibcpp :: plot(s,"+");
-  matplotlibcpp :: show();
 
-  std::cout << std::endl << m.numint(15, 75, 10, 30) << std::endl; 
+  matplotlibcpp :: show();
 
   return 0;
 }

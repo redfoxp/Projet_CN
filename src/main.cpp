@@ -48,6 +48,11 @@ std::cout << "S : points global " << '\n';
     std::cout << "" << '\n';
   }
 
+u64 test_i,test_j;
+
+m.invnumgb(N,M,12,test_i,test_j);
+std::cerr << "recherche k = 12 : "<< test_i << " : " << test_j << '\n';
+
   matplotlibcpp :: figure_size(1024,720);
   matplotlibcpp :: plot(k,"o");
   matplotlibcpp :: plot(s,"+");

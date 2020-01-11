@@ -29,18 +29,42 @@ double Maillage :: numgb(u64 N, u64 M, u64 i, u64 j)
   }
   else
   {
-    std::cout << "Numgb call not permited inputs, change please" << '\n';
+    std::cout << "Numgb call not permited inputs, change please i & j" << '\n';
     return -1.;
   }
 }
 
+void Maillage :: invnumgb(u64 N, u64 M, u64 k ,u64 &res_i, u64 &res_j)
+{
+if (k < 0 || k > (N * M)) {
+  res_i = -1;
+  res_j = -1;
+  std::cout << "Numgb call not permited inputs, change please k" << std::endl;
+  return;
+}
+
+for (u64 i = 0; i < N; i++)  {
+  for (u64 j = 0; j < M; j++) {
+    std::cout << i << " "<< j<< '\n';
+    if (numgb(N,M,i,j) == k) {
+      res_i = i;
+      res_j = j;
+      std::cout << i << " "<<j << '\n';
+      return;
+    }
+  }
+}
+
+}
+
+
 double Maillage::numint(u64 N, u64 M, u64 i, u64 j) {
-    
+
     if (i <= N && i >= 1 && j >= 1 && j <= M) {
-            return ( (j-1) * (N-2) + (i-1)); 
+            return ( (j-1) * (N-2) + (i-1));
     }
     else {
-        std::cout << "erreur i ou j mauvais interval" << std::endl;
+        std::cout << "Numgb call not permited inputs, change please i & j" << std::endl;
         return -1;
     }
 }
@@ -49,7 +73,7 @@ void Maillage::invnumint(u64 N, u64 M, u64 k, u64 &res_i, u64 &res_j) {
     if( (k < 1) || (k > (N-1)*(M-1) ) ) {
         res_i = -1;
         res_j = -1;
-        std::cout << "erreur K mauvais interval" << std::endl;
+        std::cout << "Numgb call not permited inputs, change please k" << std::endl;
         return;
     }
     else {

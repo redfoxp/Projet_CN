@@ -22,7 +22,7 @@ std::vector<double> Maillage::unifdiv(double a, long long unsigned N) {
 
 }
 
-double Maillage :: numgb(u64 N, u64 M, u64 i, u64 j)
+u64 Maillage :: numgb(u64 N, u64 M, u64 i, u64 j)
 {
   if (i <= N && i >= 0 && j >= 0 && j <= M) {
     return j * N + i;
@@ -30,7 +30,7 @@ double Maillage :: numgb(u64 N, u64 M, u64 i, u64 j)
   else
   {
     std::cout << "Numgb call not permited inputs, change please i & j" << '\n';
-    return -1.;
+    return -1;
   }
 }
 
@@ -40,16 +40,14 @@ if (k < 0 || k > (N * M)) {
   res_i = -1;
   res_j = -1;
   std::cout << "Numgb call not permited inputs, change please k" << std::endl;
-  return;
+  exit(0);
 }
 
 for (u64 i = 0; i < N; i++)  {
   for (u64 j = 0; j < M; j++) {
-    std::cout << i << " "<< j<< '\n';
     if (numgb(N,M,i,j) == k) {
       res_i = i;
       res_j = j;
-      std::cout << i << " "<<j << '\n';
       return;
     }
   }
@@ -57,10 +55,22 @@ for (u64 i = 0; i < N; i++)  {
 
 }
 
+u64 Maillage :: num_int_gb(u64 N, u64 M, u64 k_int)
+{
+  u64 int_i,int_j;
 
-double Maillage::numint(u64 N, u64 M, u64 i, u64 j) {
+  invnumgb(N, M, k_int, int_i, int_j);
+  std::cout << "in func" << '\n';
+  std::cout << "i : "<<int_i << " j : " << int_j << '\n';
+  u64 k = numgb(N, M, int_i, int_j);
+  std::cout << k << '\n';
+  return k;
+}
 
-    if (i <= N && i >= 1 && j >= 1 && j <= M) {
+
+u64 Maillage::numint(u64 N, u64 M, u64 i, u64 j) {
+
+    if (i <= N-1 && i >= 1 && j >= 1 && j <= M-1) {
             return ( (j-1) * (N-2) + (i-1));
     }
     else {
@@ -70,20 +80,20 @@ double Maillage::numint(u64 N, u64 M, u64 i, u64 j) {
 }
 
 void Maillage::invnumint(u64 N, u64 M, u64 k, u64 &res_i, u64 &res_j) {
-    if( (k < 1) || (k > (N-1)*(M-1) ) ) {
+    if( (k < 1) || (k > (N-2)*(M-2) ) ) {
         res_i = -1;
         res_j = -1;
         std::cout << "Numgb call not permited inputs, change please k" << std::endl;
-        return;
+        exit(0);
     }
     else {
-        for ( int i = 2; i <= N; i++ ) {
-            for (int j = 2; j <= M; j++ ) {
+        for ( int i = 1; i < N -1; i++ ) {
+            for (int j = 1; j < M-1; j++ ) {
                 if ( numint(N, M, i, j) == k ){
                     res_i = i;
                     res_j = j;
-                    return;
-                }
+                  }
+                std::cout << i <<" : " << j<< '\n';
             }
         }
     }

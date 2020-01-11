@@ -50,14 +50,14 @@ std::cout << "S : points global " << '\n';
 
 u64 test_i,test_j;
 
-m.invnumgb(N,M,12,test_i,test_j);
-std::cerr << "recherche k = 12 : "<< test_i << " : " << test_j << '\n';
+m.invnumint(N,M,3,test_i,test_j);
+std::cerr << "recherche k_int = 3 : "<< test_i << " : " << test_j << '\n';
+std::cout << "k global pour k_int = 3 : "<< m.num_int_gb(N,M,3) << '\n';
+  //matplotlibcpp :: figure_size(1024,720);
+  //matplotlibcpp :: plot(k,"o");
+  //matplotlibcpp :: plot(s,"+");
 
-  matplotlibcpp :: figure_size(1024,720);
-  matplotlibcpp :: plot(k,"o");
-  matplotlibcpp :: plot(s,"+");
-
-  matplotlibcpp :: show();
+  //matplotlibcpp :: show();
 
   return 0;
 }

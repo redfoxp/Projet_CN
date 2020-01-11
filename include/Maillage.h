@@ -14,6 +14,7 @@ public:
     Maillage();
 
     std::vector<double> unifdiv(double a, double N);
+    double numint( N, M, i, j); 
 
     void print();
 

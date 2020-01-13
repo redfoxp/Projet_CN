@@ -153,6 +153,27 @@ std::vector<std::vector<u64>> CalcMatBT(std::vector<u64> xs, std::vector<u64> ys
   return BT;
 }
 
+//-------------------------------------------------------//
+//               Coordnees barycentriques                //
+
+int Maillage :: DansTrg(std::vector<u64> xs, std::vector<u64> ys, u64 x, u64 y)
+{
+  int res = 0;
+  u64 AB_x = xs[1] - xs[0];
+  u64 AB_y = ys[1] - ys[0];
+
+  u64 AM_x = x - xs[0];
+  u64 AM_y = y - xs[0];
+
+  u64 AC_x = xs[2] - xs[0];
+  u64 AC_y = ys[2] - ys[0];
+
+if ((AM_x ==  x * AB_x + y * AC_x) && (AM_y) == x * AB_y + y * AC_y) {
+    res = 1;
+}
+
+return res;
+}
 
 
 //-------------------------------------------------------//

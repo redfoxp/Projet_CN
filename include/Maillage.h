@@ -34,6 +34,10 @@ public:
     std::vector<std::vector<u64>> CalcMatBT(std::vector<u64> xs, std::vector<u64> ys);
 
     //-------------------------------------------------------//
+    //               Coordnees barycentriques                //
+    int DansTrg(std::vector<u64> xs, std::vector<u64> ys, u64 x, u64 y);
+
+    //-------------------------------------------------------//
     //                      Affichage                        //
     void print();
     void print_num_gb(u64 N, u64 M);

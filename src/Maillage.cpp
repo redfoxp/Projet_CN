@@ -114,9 +114,26 @@ std::vector<std::vector<Triangle>> Maillage :: maillageTR(u64 N, u64 M)
   }
   for (u64 i = 0; i < N-1; i++) {
     for (u64 j = 0; j < M-1; j++) {
-      TRG[i][j].n1 = numgb(N, M, i,   j);         //  Implementation pour T- ,car dans l'énoncé n'est pas precisé
-      TRG[i][j].n2 = numgb(N, M, i+1, j);         //  lequel choisir ou si il faut les deux
-      TRG[i][j].n3 = numgb(N, M, i+1, j+1);
+      if (i % 2 == 1) {
+        TRG[i][j].n1_l = numgb(N, M, i,   j);
+        TRG[i][j].n2_l = numgb(N, M, i+1, j);
+        TRG[i][j].n3_l = numgb(N, M, i+1, j+1);
+
+        TRG[i][j].n1_u = numgb(N, M, i,   j);
+        TRG[i][j].n2_u = numgb(N, M, i+1, j +1);
+        TRG[i][j].n3_u = numgb(N, M, i, j+1);
+
+      }
+      else
+      {
+        TRG[i][j].n1_l = numgb(N, M, i,   j);
+        TRG[i][j].n2_l = numgb(N, M, i+1, j);
+        TRG[i][j].n3_l = numgb(N, M, i, j+1);
+
+        TRG[i][j].n1_u = numgb(N, M, i,  j+1);
+        TRG[i][j].n2_u = numgb(N, M, i+1,j+1);
+        TRG[i][j].n3_u = numgb(N, M, i+1,  j);
+      }
     }
   }
   return TRG;

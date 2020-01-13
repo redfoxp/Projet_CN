@@ -24,13 +24,13 @@ std::vector<double> Maillage::unifdiv(double a, long long unsigned N) {
 
 u64 Maillage :: numgb(u64 N, u64 M, u64 i, u64 j)
 {
-  if (i <= N && i >= 0 && j >= 0 && j <= M) {
+  if (i < N && i >= 0 && j >= 0 && j < M) {
     return j * N + i;
   }
   else
   {
     std::cout << "Numgb call not permited inputs, change please i & j" << '\n';
-    return -1;
+    exit(0);
   }
 }
 
@@ -59,23 +59,20 @@ u64 Maillage :: num_int_gb(u64 N, u64 M, u64 k_int)
 {
   u64 int_i,int_j;
 
-  invnumgb(N, M, k_int, int_i, int_j);
-  std::cout << "in func" << '\n';
-  std::cout << "i : "<<int_i << " j : " << int_j << '\n';
-  u64 k = numgb(N, M, int_i, int_j);
-  std::cout << k << '\n';
-  return k;
+  invnumint(N, M, k_int, int_i, int_j);
+
+  return numgb(N, M, int_i, int_j);
 }
 
 
 u64 Maillage::numint(u64 N, u64 M, u64 i, u64 j) {
 
-    if (i <= N-1 && i >= 1 && j >= 1 && j <= M-1) {
+    if (i < N-1 && i >= 1 && j >= 1 && j < M-1) {
             return ( (j-1) * (N-2) + (i-1));
     }
     else {
         std::cout << "Numgb call not permited inputs, change please i & j" << std::endl;
-        return -1;
+        exit(0);
     }
 }
 
@@ -93,11 +90,18 @@ void Maillage::invnumint(u64 N, u64 M, u64 k, u64 &res_i, u64 &res_j) {
                     res_i = i;
                     res_j = j;
                   }
-                std::cout << i <<" : " << j<< '\n';
             }
         }
     }
 }
+
+u64 Maillage :: num_gb_int(u64 N, u64 M, u64 s_gb)
+{
+  u64 i_gb,j_gb;
+  invnumgb(N, M, s_gb, i_gb, j_gb);
+  return numint(N,M,i_gb,j_gb);
+}
+
 
 void Maillage::print() {
 
@@ -111,4 +115,34 @@ void Maillage::print() {
         std::cout << i << " : " << y[i] << std::endl;
     }
 
+}
+
+void Maillage ::  print_num_gb(u64 N,u64 M)
+{
+  std::vector<double> s;
+
+  std::cout << "S : points global " << '\n';
+    for (size_t j = 0; j < M; j++) {
+      for (size_t i = 0; i < N; i++) {
+        s.push_back(numgb(N,M,i,j));
+        std::cout << numgb(N,M,i,j) << " " ;
+
+      }
+      std::cout << '\n';
+    }
+}
+void Maillage ::  print_num_int(u64 N, u64 M)
+{
+  std::vector<double> k;
+
+    std::cout << "K : points interieur " << '\n';
+    for (int j = 1; j < M-1; j++){
+      for (int i = 1; i < N-1; i++)  {
+        k.push_back(numint(N,M,i,j));
+        std::cout << numint(N,M,i,j) << " " ;
+
+      }
+      std::cout << '\n';
+
+    }
 }

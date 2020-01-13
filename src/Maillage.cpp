@@ -22,6 +22,9 @@ std::vector<double> Maillage::unifdiv(double a, long long unsigned N) {
 
 }
 
+//-------------------------------------------------------//
+//                     Numerotation                      //
+
 u64 Maillage :: numgb(u64 N, u64 M, u64 i, u64 j)
 {
   if (i < N && i >= 0 && j >= 0 && j < M) {
@@ -101,7 +104,42 @@ u64 Maillage :: num_gb_int(u64 N, u64 M, u64 s_gb)
   invnumgb(N, M, s_gb, i_gb, j_gb);
   return numint(N,M,i_gb,j_gb);
 }
+//-------------------------------------------------------//
+//                    Triangulation                      //
+std::vector<std::vector<Triangle>> Maillage :: maillageTR(u64 N, u64 M)
+{
+  std::vector< std::vector<Triangle>> TRG(N);
+  for (size_t i = 0; i < M; i++) {
+    TRG[i].resize(M);
+  }
+  for (u64 i = 0; i < N-1; i++) {
+    for (u64 j = 0; j < M-1; j++) {
+      TRG[i][j].n1 = numgb(N, M, i,   j);         //  Implementation pour T- ,car dans l'énoncé n'est pas precisé
+      TRG[i][j].n2 = numgb(N, M, i+1, j);         //  lequel choisir ou si il faut les deux
+      TRG[i][j].n3 = numgb(N, M, i+1, j+1);
+    }
+  }
+  return TRG;
+}
+std::vector<std::vector<u64>> CalcMatBT(std::vector<u64> xs, std::vector<u64> ys)
+{
+  std::vector<std::vector<u64>> BT(2);
+  BT[0].resize(2);
+  BT[1].resize(2);
 
+  BT[0][0] = xs[1] - xs[0]; //k = 2
+  BT[0][1] = ys[1] - ys[0];
+
+  BT[1][0] = xs[2] - xs[0]; //k = 3
+  BT[1][1] = ys[2] - ys[0];
+
+  return BT;
+}
+
+
+
+//-------------------------------------------------------//
+//                      Affichage                        //
 
 void Maillage::print() {
 
@@ -121,7 +159,7 @@ void Maillage ::  print_num_gb(u64 N,u64 M)
 {
   std::vector<double> s;
 
-  std::cout << "S : points global " << '\n';
+  std::cout << '\n' << "S : points global " << '\n';
     for (size_t j = 0; j < M; j++) {
       for (size_t i = 0; i < N; i++) {
         s.push_back(numgb(N,M,i,j));
@@ -135,7 +173,7 @@ void Maillage ::  print_num_int(u64 N, u64 M)
 {
   std::vector<double> k;
 
-    std::cout << "K : points interieur " << '\n';
+    std::cout <<'\n' << "K : points interieur " << '\n';
     for (int j = 1; j < M-1; j++){
       for (int i = 1; i < N-1; i++)  {
         k.push_back(numint(N,M,i,j));
@@ -145,4 +183,5 @@ void Maillage ::  print_num_int(u64 N, u64 M)
       std::cout << '\n';
 
     }
+    std::cout << '\n';
 }

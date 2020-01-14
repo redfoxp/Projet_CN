@@ -21,11 +21,11 @@ public:
     //-------------------------------------------------------//
     //                     Numerotation                      //
     u64 numgb(u64 N, u64 M, u64 i, u64 j);
-    void invnumgb(u64 N, u64 M, u64 k ,u64 &res_i, u64 &res_j);
+    int invnumgb(u64 N, u64 M, u64 k ,u64 &res_i, u64 &res_j);
     u64 num_int_gb(u64 N, u64 M, u64 k_int);
 
     u64 numint(u64 N, u64 M, u64 i, u64 j);
-    void invnumint(u64 N, u64 M, u64 k, u64 &res_i, u64 &res_j);
+    int invnumint(u64 N, u64 M, u64 k, u64 &res_i, u64 &res_j);
     u64 num_gb_int(u64 N, u64 M, u64 s_gb);
 
     //-------------------------------------------------------//
@@ -35,14 +35,21 @@ public:
 
     //-------------------------------------------------------//
     //               Coordnees barycentriques                //
+    std::vector<std::vector<u64>> GradGrad(std::vector<u64> xs, std::vector<u64> ys);
     int DansTrg(std::vector<u64> xs, std::vector<u64> ys, u64 x, u64 y);
+
+    //-------------------------------------------------------//
+    //                   Probleme discret                    //
+    std::vector<double> extendVec ( u64 N, u64 M ,std::vector<double> v, std::vector<u64> k_int);
+    std::vector<double> IntVec(u64 N,u64 M, std::vector<double> w, std::vector<u64> &k_int);
 
     //-------------------------------------------------------//
     //                      Affichage                        //
     void print();
     void print_num_gb(u64 N, u64 M);
     void print_num_int(u64 N, u64 M);
-
+    void print_values_global_matrix(u64 N, u64 M ,std::vector<double> v);
+    void  print_values_int_matrix(u64 N,u64 M,std::vector<double> int_vec,std::vector<u64> &k_index);
     ~Maillage(){}
 
 };

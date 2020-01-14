@@ -52,6 +52,30 @@ std::cerr << "TRG i = "<< index_trg_i << " j = "<< index_trg_j << " coordonees :
       "                        n2 :   " << trig.n2_u << '\n' <<
       "                        n3 :   " << trig.n3_u << '\n';
 
+// TEST ajout valeurs a la matrice
+std::vector<double> v (5);
+std::vector<u64> k_int (5);
+k_int[0] = 42;
+k_int[1] = 43;
+k_int[2] = 44;
+k_int[3] = 45;
+k_int[4] = 46;
+
+v[0] = 0.2;
+v[1] = 0.21;
+v[2] = 0.3;
+v[3] = 0.31;
+v[4] = 0.4;
+
+std::vector<double> Global_vec = m.extendVec(N,M,v,k_int);
+m.print_values_global_matrix(N,M,Global_vec);
+
+std::vector<u64> k_index;
+std::vector<double> Int_vec = m.IntVec(N,M,Global_vec,k_index);
+
+m.print_values_int_matrix(N,M,Int_vec,k_index);
+
+
 //-----------------------------------------------------------//
 //                          AFFICHAGE
   //matplotlibcpp :: figure_size(1024,720);

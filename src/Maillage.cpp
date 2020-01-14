@@ -28,22 +28,22 @@ std::vector<double> Maillage::unifdiv(double a, long long unsigned N) {
 u64 Maillage :: numgb(u64 N, u64 M, u64 i, u64 j)
 {
   if (i < N && i >= 0 && j >= 0 && j < M) {
-    return j * N + i;
+    return j * M + i;
   }
   else
   {
     std::cout << "Numgb call not permited inputs, change please i & j" << '\n';
-    exit(0);
+    return -1;
   }
 }
 
-void Maillage :: invnumgb(u64 N, u64 M, u64 k ,u64 &res_i, u64 &res_j)
+int Maillage :: invnumgb(u64 N, u64 M, u64 k ,u64 &res_i, u64 &res_j)
 {
 if (k < 0 || k > (N * M)) {
   res_i = -1;
   res_j = -1;
-  std::cout << "Numgb call not permited inputs, change please k" << std::endl;
-  exit(0);
+  std::cout << "Invnumgb call not permited inputs, change please k" << std::endl;
+  return -1;
 }
 
 for (u64 i = 0; i < N; i++)  {
@@ -51,7 +51,7 @@ for (u64 i = 0; i < N; i++)  {
     if (numgb(N,M,i,j) == k) {
       res_i = i;
       res_j = j;
-      return;
+      return 0;
     }
   }
 }
@@ -74,17 +74,17 @@ u64 Maillage::numint(u64 N, u64 M, u64 i, u64 j) {
             return ( (j-1) * (N-2) + (i-1));
     }
     else {
-        std::cout << "Numgb call not permited inputs, change please i & j" << std::endl;
-        exit(0);
+        //std::cout << "Numint call not permited inputs, change please i & j" << std::endl;
+        return -1;
     }
 }
 
-void Maillage::invnumint(u64 N, u64 M, u64 k, u64 &res_i, u64 &res_j) {
+int Maillage::invnumint(u64 N, u64 M, u64 k, u64 &res_i, u64 &res_j) {
     if( (k < 1) || (k > (N-2)*(M-2) ) ) {
         res_i = -1;
         res_j = -1;
-        std::cout << "Numgb call not permited inputs, change please k" << std::endl;
-        exit(0);
+        std::cout << "Invnumint call not permited inputs, change please k" << std::endl;
+        return -1;
     }
     else {
         for ( int i = 1; i < N -1; i++ ) {
@@ -96,13 +96,17 @@ void Maillage::invnumint(u64 N, u64 M, u64 k, u64 &res_i, u64 &res_j) {
             }
         }
     }
+    return 0;
 }
 
 u64 Maillage :: num_gb_int(u64 N, u64 M, u64 s_gb)
 {
   u64 i_gb,j_gb;
-  invnumgb(N, M, s_gb, i_gb, j_gb);
-  return numint(N,M,i_gb,j_gb);
+  u64 res = invnumgb(N, M, s_gb, i_gb, j_gb);
+  if (res != -1) {
+    return numint(N,M,i_gb,j_gb);
+  }
+  return -1;
 }
 //-------------------------------------------------------//
 //                    Triangulation                      //
@@ -156,6 +160,19 @@ std::vector<std::vector<u64>> CalcMatBT(std::vector<u64> xs, std::vector<u64> ys
 //-------------------------------------------------------//
 //               Coordnees barycentriques                //
 
+std::vector<std::vector<u64>> GradGrad(std::vector<u64> xs, std::vector<u64> ys)
+{
+  std::vector<std::vector<u64>> GrdGrd (3);
+  for (int i = 0; i < 3; i++) {
+      GrdGrd[i].resize(3);
+  }
+
+  // A COMPLETER ------------------------------------------
+
+  return GrdGrd;
+}
+
+
 int Maillage :: DansTrg(std::vector<u64> xs, std::vector<u64> ys, u64 x, u64 y)
 {
   int res = 0;
@@ -174,6 +191,32 @@ if ((AM_x ==  x * AB_x + y * AC_x) && (AM_y) == x * AB_y + y * AC_y) {
 
 return res;
 }
+
+//-------------------------------------------------------//
+//                   Probleme discret                    //
+std::vector<double>  Maillage ::  extendVec ( u64 N, u64 M ,std::vector<double> v, std::vector<u64> k_int)
+{
+  std::vector<double> v_tild(N * M);
+
+  for (int i = 0; i < v.size(); i++) {
+    v_tild[num_int_gb(N,M,k_int[i])] = v[i];
+  }
+  return v_tild;
+}
+std::vector<double> Maillage :: IntVec(u64 N,u64 M, std::vector<double> w, std::vector<u64> &k_int)
+{
+  std::vector<double> v ((N-2) * (M-2));
+  u64 test;
+  for (u64 i = 0; i < w.size(); i++) {
+    test = num_gb_int(N,M,i);
+    if (test != -1) {
+      v[test] = w[i];
+      k_int.push_back(test);
+    }
+  }
+  return v;
+}
+
 
 
 //-------------------------------------------------------//
@@ -198,8 +241,8 @@ void Maillage ::  print_num_gb(u64 N,u64 M)
   std::vector<double> s;
 
   std::cout << '\n' << "S : points global " << '\n';
-    for (size_t j = 0; j < M; j++) {
-      for (size_t i = 0; i < N; i++) {
+  for (size_t j = 0; j < M; j++) {
+    for (size_t i = 0; i < N; i++) {
         s.push_back(numgb(N,M,i,j));
         std::cout << numgb(N,M,i,j) << " " ;
 
@@ -222,4 +265,63 @@ void Maillage ::  print_num_int(u64 N, u64 M)
 
     }
     std::cout << '\n';
+}
+
+void Maillage :: print_values_global_matrix(u64 N, u64 M ,std::vector<double> v)
+{
+  std::cout << '\n';
+  for (u64 j = 0; j < M; j++) {
+    for (u64 i = 0; i < N; i++) {
+      if (v[j * N + i] == 0) {
+        std::cout << v[j * N + i] << "    ";
+      }
+      else
+      {
+        std::cout << v[j * N + i] << " ";
+      }
+
+      /*
+      if (v[j*N + i] != 0) {
+        std::cout << v[j * N + i] << " ";
+      }
+      else
+      {
+        //std::cout << numgb(N,M,i,j) << " ";
+      }
+      */
+    }
+    std::cout << '\n';
+  }
+  std::cout  << '\n';
+}
+
+void Maillage :: print_values_int_matrix(u64 N,u64 M,std::vector<double> int_vec, std::vector<u64> &k_index)
+{
+  u64 cmpt = 0;
+  std::cout << '\n';
+  for (int j = 1; j < M-1; j++){
+    for (int i = 1; i < N-1; i++)  {
+      if (int_vec[cmpt] ==  0) {
+        std::cout << int_vec[cmpt] <<"    ";
+      }
+      else
+      {
+        std::cout << int_vec[cmpt] <<" ";
+      }
+
+    /*
+    if (int_vec[cmpt] != 0) {
+      std::cout << int_vec[cmpt] <<" ";
+    }
+    else
+    {
+      std::cout << k_index[cmpt] << " ";
+    }
+    */
+    cmpt++;
+    }
+
+    std::cout << '\n';
+  }
+
 }

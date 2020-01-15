@@ -110,39 +110,42 @@ u64 Maillage :: num_gb_int(u64 N, u64 M, u64 s_gb)
 }
 //-------------------------------------------------------//
 //                    Triangulation                      //
-std::vector<std::vector<Triangle>> Maillage :: maillageTR(u64 N, u64 M)
+std::vector<std::vector<std::vector<Triangle>>> Maillage :: maillageTR(u64 N, u64 M)
 {
-  std::vector< std::vector<Triangle>> TRG(N);
-  for (size_t i = 0; i < M; i++) {
+  std::vector< std::vector<std::vector<Triangle>>> TRG(N);
+  for (u64 i = 0; i < M; i++) {
     TRG[i].resize(M);
+    for (u64 j = 0; j < M; j++) {
+      TRG[i][j].resize(2);
+    }
   }
   for (u64 i = 0; i < N-1; i++) {
     for (u64 j = 0; j < M-1; j++) {
-      if (i % 2 == 1) {
-        TRG[i][j].n1_l = numgb(N, M, i,   j);
-        TRG[i][j].n2_l = numgb(N, M, i+1, j);
-        TRG[i][j].n3_l = numgb(N, M, i+1, j+1);
+      if (i % 2 == 1) {   //index impair
+        TRG[i][j][0].n1 = numgb(N, M, i+1, j);
+        TRG[i][j][0].n2 = numgb(N, M, i,   j);        //T-
+        TRG[i][j][0].n3 = numgb(N, M, i+1, j+1);
 
-        TRG[i][j].n1_u = numgb(N, M, i,   j);
-        TRG[i][j].n2_u = numgb(N, M, i+1, j +1);
-        TRG[i][j].n3_u = numgb(N, M, i, j+1);
+        TRG[i][j][1].n1 = numgb(N, M, i, j+1);
+        TRG[i][j][1].n2 = numgb(N, M, i+1, j +1);     //T+
+        TRG[i][j][1].n3 = numgb(N, M, i,   j);
 
       }
-      else
+      else      //index pair
       {
-        TRG[i][j].n1_l = numgb(N, M, i,   j);
-        TRG[i][j].n2_l = numgb(N, M, i+1, j);
-        TRG[i][j].n3_l = numgb(N, M, i, j+1);
+        TRG[i][j][0].n1 = numgb(N, M, i,   j);
+        TRG[i][j][0].n2 = numgb(N, M, i+1, j);        //T-
+        TRG[i][j][0].n3 = numgb(N, M, i, j+1);
 
-        TRG[i][j].n1_u = numgb(N, M, i,  j+1);
-        TRG[i][j].n2_u = numgb(N, M, i+1,j+1);
-        TRG[i][j].n3_u = numgb(N, M, i+1,  j);
+        TRG[i][j][1].n1 = numgb(N, M, i+1,j+1);
+        TRG[i][j][1].n2 = numgb(N, M, i,  j+1);       //T+
+        TRG[i][j][1].n3 = numgb(N, M, i+1,  j);
       }
     }
   }
   return TRG;
 }
-std::vector<std::vector<u64>> CalcMatBT(std::vector<u64> xs, std::vector<u64> ys)
+std::vector<std::vector<u64>> Maillage :: CalcMatBT(std::vector<u64> xs, std::vector<u64> ys)
 {
   std::vector<std::vector<u64>> BT(2);
   BT[0].resize(2);
@@ -160,14 +163,65 @@ std::vector<std::vector<u64>> CalcMatBT(std::vector<u64> xs, std::vector<u64> ys
 //-------------------------------------------------------//
 //               Coordnees barycentriques                //
 
-std::vector<std::vector<u64>> GradGrad(std::vector<u64> xs, std::vector<u64> ys)
+std::vector<std::vector<u64>> Maillage :: GradGrad(std::vector<u64> xs, std::vector<u64> ys, u64 index_point, int Pos_triangle)
 {
   std::vector<std::vector<u64>> GrdGrd (3);
   for (int i = 0; i < 3; i++) {
       GrdGrd[i].resize(3);
   }
+  std::vector<std::vector<u64>> MatBT = CalcMatBT(xs,ys);
+  std::vector<double> M(2);                                      //Point barycentrique   //M[0] -> x      //M[1] -> y
+  if (index_point % 2 == 0) {
+    if (Pos_triangle == 0) {  //T-
+        M[0] = (double)xs[0] - (double)abs(MatBT[0][0])/3;
+        M[1] = (double)ys[0] + (double)abs(MatBT[1][1])/3;
+    }
+    if (Pos_triangle == 1)    //T+
+    {
+      M[0] = (double)xs[0] + (double)abs(MatBT[0][0])/3;
+      M[1] = (double)ys[0] - (double)abs(MatBT[1][1])/3;
+    }
+  }
+  else
+  {
+    if (Pos_triangle == 0) {  //T-
+        M[0] = (double)xs[0] + (double)abs(MatBT[0][0])/3;
+        M[1] = (double)ys[0] + (double)abs(MatBT[1][1])/3;
+    }
+    if (Pos_triangle == 1)    //T+
+    {
+      M[0] = (double)xs[0] - (double)abs(MatBT[0][0])/3;
+      M[1] = (double)ys[0] - (double)abs(MatBT[1][1])/3;
+    }
+  }
+  std::vector<double> nabla_lambda_k(2);
+  std::vector<double> nabla_lambda_j(2);
 
-  // A COMPLETER ------------------------------------------
+  double nabla_k, nabla_j;
+
+  for (int k = 0; k < 3; k++) {
+    nabla_lambda_k[0] = xs[k] - M[0];
+    nabla_lambda_k[1] = ys[k] - M[1];
+    for (int j = 0; j < 3; j++) {
+      nabla_lambda_j[0] = xs[j] - M[0];
+      nabla_lambda_j[1] = ys[j] - M[1];
+      if (k == 0) {
+        nabla_k = 0;
+        nabla_j = 0;
+      }
+      else
+      {
+        nabla_k = (double)nabla_lambda_k[0] * (double)(1/(double)MatBT[k][0]) + (double)nabla_lambda_k[1] * (double)(1/(double)MatBT[k][1]);
+        nabla_j = ((double)1 / double(MatBT[k][0])) * nabla_lambda_j[0] + ((double)1/ (double)MatBT[k][1]) * (double)nabla_lambda_j[1];
+      }
+      GrdGrd[k][j] = nabla_k * nabla_j;
+    }
+  }
+
+
+
+
+
 
   return GrdGrd;
 }

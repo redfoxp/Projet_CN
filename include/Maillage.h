@@ -30,12 +30,12 @@ public:
 
     //-------------------------------------------------------//
     //                    Triangulation                      //
-    std::vector< std::vector<Triangle>> maillageTR(u64 N, u64 M);
+    std::vector< std::vector<std::vector<Triangle>>> maillageTR(u64 N, u64 M);
     std::vector<std::vector<u64>> CalcMatBT(std::vector<u64> xs, std::vector<u64> ys);
 
     //-------------------------------------------------------//
     //               Coordnees barycentriques                //
-    std::vector<std::vector<u64>> GradGrad(std::vector<u64> xs, std::vector<u64> ys);
+    std::vector<std::vector<u64>> GradGrad(std::vector<u64> xs, std::vector<u64> ys, u64 index_point, int Pos_triangle);
     int DansTrg(std::vector<u64> xs, std::vector<u64> ys, u64 x, u64 y);
 
     //-------------------------------------------------------//

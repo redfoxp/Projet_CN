@@ -3,24 +3,15 @@
 #include "types.h"
 class Triangle {
 public:
-  u64 n1_u;
-  u64 n2_u; //u pour upper pour T+
-  u64 n3_u;
-
-  u64 n1_l;
-  u64 n2_l; //l pour lower pour T-
-  u64 n3_l;
+  u64 n1;
+  u64 n2;
+  u64 n3;
 
   Triangle ()
   {
-    n1_l = 0;
-    n1_u = 0;
-
-    n2_l = 0;
-    n2_u = 0;
-    
-    n3_l = 0;
-    n3_u = 0;
+    n1 = 0;
+    n2 = 0;
+    n3 = 0;
   }
   ~Triangle (){}
 };

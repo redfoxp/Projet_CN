@@ -42,15 +42,15 @@ std::cout << "global    " << test_pos_gb  << " interieur : " << m.num_gb_int(N,M
 u64 index_trg_i = 2;
 u64 index_trg_j = 2;
 
-Triangle trig = m.maillageTR(N,M)[index_trg_i][index_trg_j];
+std::vector<Triangle> trig = m.maillageTR(N,M)[index_trg_i][index_trg_j];
 
 std::cerr << "TRG i = "<< index_trg_i << " j = "<< index_trg_j << " coordonees : Global " << '\n' <<
-      "                T-      n1 :   " << trig.n1_l <<'\n' <<
-      "                        n2 :   " << trig.n2_l << '\n' <<
-      "                        n3 :   " << trig.n3_l << '\n' <<
-      "                T+      n1 :   " << trig.n1_u <<'\n' <<
-      "                        n2 :   " << trig.n2_u << '\n' <<
-      "                        n3 :   " << trig.n3_u << '\n';
+      "                T-      n1 :   " << trig[0].n1 <<'\n' <<
+      "                        n2 :   " << trig[0].n2 << '\n' <<
+      "                        n3 :   " << trig[0].n3 << '\n' <<
+      "                T+      n1 :   " << trig[1].n1 <<'\n' <<
+      "                        n2 :   " << trig[1].n2 << '\n' <<
+      "                        n3 :   " << trig[1].n3 << '\n';
 
 // TEST ajout valeurs a la matrice
 std::vector<double> v (5);

@@ -216,6 +216,67 @@ std::vector<std::vector<u64>> Maillage :: GradGrad(std::vector<u64> xs, std::vec
   return GrdGrd;
 }
 
+double Maillage :: GradGrad_v2(std::vector<u64> xs, std::vector<u64> ys, u64 index_point, int Pos_triangle)
+{
+  std::vector<std::vector<u64>> GrdGrd (3);
+  for (int i = 0; i < 3; i++) {
+      GrdGrd[i].resize(3);
+  }
+  std::vector<std::vector<u64>> MatBT = CalcMatBT(xs,ys);
+  std::vector<double> M(2);                                      //Point barycentrique   //M[0] -> x      //M[1] -> y
+  if (index_point % 2 == 0) {
+    if (Pos_triangle == 0) {  //T-
+        M[0] = (double)xs[0] - (double)abs(MatBT[0][0])/3;
+        M[1] = (double)ys[0] + (double)abs(MatBT[1][1])/3;
+    }
+    if (Pos_triangle == 1)    //T+
+    {
+      M[0] = (double)xs[0] + (double)abs(MatBT[0][0])/3;
+      M[1] = (double)ys[0] - (double)abs(MatBT[1][1])/3;
+    }
+  }
+  else
+  {
+    if (Pos_triangle == 0) {  //T-
+        M[0] = (double)xs[0] + (double)abs(MatBT[0][0])/3;
+        M[1] = (double)ys[0] + (double)abs(MatBT[1][1])/3;
+    }
+    if (Pos_triangle == 1)    //T+
+    {
+      M[0] = (double)xs[0] - (double)abs(MatBT[0][0])/3;
+      M[1] = (double)ys[0] - (double)abs(MatBT[1][1])/3;
+    }
+  }
+  std::vector<double> nabla_lambda_k(2);
+  std::vector<double> nabla_lambda_j(2);
+
+  double nabla_k, nabla_j;
+
+  for (int k = 0; k < 3; k++) {
+    nabla_lambda_k[0] = xs[k] - M[0];
+    nabla_lambda_k[1] = ys[k] - M[1];
+    for (int j = 0; j < 3; j++) {
+      nabla_lambda_j[0] = xs[j] - M[0];
+      nabla_lambda_j[1] = ys[j] - M[1];
+      //std::cout << "debug" << '\n';
+      if (k == 0) {
+        nabla_k = 0;
+        nabla_j = 0;
+      }
+      else
+      {
+        nabla_k = ((double)1 / double(MatBT[k][0])) * nabla_lambda_k[0] + ((double)1/ (double)MatBT[k][1]) * nabla_lambda_k[1];
+        nabla_j = ((double)1 / double(MatBT[k][0])) * nabla_lambda_j[0] + ((double)1/ (double)MatBT[k][1]) * nabla_lambda_j[1];
+      }
+
+      GrdGrd[k][j] = nabla_k * nabla_j;
+    }
+  }
+
+  return (GrdGrd[1][1] * GrdGrd[2][2] - GrdGrd[2][1] * GrdGrd[1][2]);
+}
+
+
 
 int Maillage :: DansTrg(std::vector<u64> xs, std::vector<u64> ys, u64 x, u64 y)
 {
@@ -265,18 +326,45 @@ std::vector<double> Maillage :: IntVec(u64 N,u64 M, std::vector<double> w, std::
 std::vector<double> Maillage :: matvec(std::vector<double> v,u64 N, u64 M)
 {
   std::vector<double> vv = extendVec(N,M,v);
-  std::vector<double> W(N * M);
-  std::vector<double> xs(3);
-  std::vector<double> ys(3);
+  std::vector<double> ww(N * M);
+  std::vector<u64> xs(3);
+  std::vector<u64> ys(3);
+  u64 x,y;
+  u64 s,r;
+  double GRAD2;
+  double res;
   u64 K = N * M;
   std::vector<std::vector<Triangle>> TRG = maillageTR(N,M);
   for (u64 t = 0; t < K; t++) {
     for (int type_trig = 0; type_trig < 2; type_trig++) {
-      
+      invnumgb(N, M, TRG[t][type_trig].n[0] , x, y);
+      xs[0] = x;
+      ys[0] = y;
+      invnumgb(N, M, TRG[t][type_trig].n[1] , x, y);
+      xs[1] = x;
+      ys[1] = y;
+      invnumgb(N, M, TRG[t][type_trig].n[2] , x, y);
+      xs[2] = x;
+      ys[2] = y;
+
+      std::vector<std::vector<u64>> BT = CalcMatBT(xs,ys);
+
+      for (int a = 0; a < 3; a++) {
+        s = TRG[t][type_trig].n[a];
+        res = 0;
+        for (int b = 0; b < 3; b++) {
+          r = TRG[t][type_trig].n[b];
+          GRAD2 = GradGrad_v2(xs, ys, t, type_trig);
+          res = res + vv[r] * GRAD2;
+        }
+        ww[s] = ww[s] + res;
+      }
     }
   }
-
-  return W;
+  std::vector<double> w;
+  std::vector<u64> k_int;
+  w = IntVec(N, M, ww, k_int);
+  return w;
 }
 
 

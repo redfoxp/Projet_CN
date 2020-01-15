@@ -36,6 +36,7 @@ public:
     //-------------------------------------------------------//
     //               Coordnees barycentriques                //
     std::vector<std::vector<u64>> GradGrad(std::vector<u64> xs, std::vector<u64> ys, u64 index_point, int Pos_triangle);
+    double GradGrad_v2(std::vector<u64> xs, std::vector<u64> ys, u64 index_point, int Pos_triangle);
     int DansTrg(std::vector<u64> xs, std::vector<u64> ys, u64 x, u64 y);
 
     //-------------------------------------------------------//

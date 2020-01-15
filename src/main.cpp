@@ -67,7 +67,10 @@ std::vector<u64> k_index;
 std::vector<double> Int_vec = m.IntVec(N,M,Global_vec,k_index);
 
 m.print_values_int_matrix(N,M,Int_vec,k_index);
+//      TEST MAT VEC
 
+std::vector<double> Global_matvec = m.matvec(Int_vec,N,M);
+m.print_values_global_matrix(N,M,Global_matvec);
 
 //-----------------------------------------------------------//
 //                          AFFICHAGE

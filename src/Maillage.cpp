@@ -28,7 +28,7 @@ std::vector<double> Maillage::unifdiv(double a, long long unsigned N) {
 u64 Maillage :: numgb(u64 N, u64 M, u64 i, u64 j)
 {
   if (i < N && i >= 0 && j >= 0 && j < M) {
-    return j * M + i;
+    return j * N + i;
   }
   else
   {
@@ -80,7 +80,7 @@ u64 Maillage::numint(u64 N, u64 M, u64 i, u64 j) {
 }
 
 int Maillage::invnumint(u64 N, u64 M, u64 k, u64 &res_i, u64 &res_j) {
-    if( (k < 1) || (k > (N-2)*(M-2) ) ) {
+    if( (k < 0) || (k > (N-2)*(M-2) ) ) {
         res_i = -1;
         res_j = -1;
         std::cout << "Invnumint call not permited inputs, change please k" << std::endl;
@@ -110,38 +110,33 @@ u64 Maillage :: num_gb_int(u64 N, u64 M, u64 s_gb)
 }
 //-------------------------------------------------------//
 //                    Triangulation                      //
-std::vector<std::vector<std::vector<Triangle>>> Maillage :: maillageTR(u64 N, u64 M)
+std::vector<std::vector<Triangle>> Maillage :: maillageTR(u64 N, u64 M)
 {
-  std::vector< std::vector<std::vector<Triangle>>> TRG(N);
-  for (u64 i = 0; i < M; i++) {
-    TRG[i].resize(M);
-    for (u64 j = 0; j < M; j++) {
-      TRG[i][j].resize(2);
-    }
+  std::vector<std::vector<Triangle>> TRG(N*M);
+  for (u64 i = 0; i < N*M; i++) {
+    TRG[i].resize(2);
   }
-  for (u64 i = 0; i < N-1; i++) {
-    for (u64 j = 0; j < M-1; j++) {
+  for (u64 i = 0; i < N *M; i++) {
       if (i % 2 == 1) {   //index impair
-        TRG[i][j][0].n1 = numgb(N, M, i+1, j);
-        TRG[i][j][0].n2 = numgb(N, M, i,   j);        //T-
-        TRG[i][j][0].n3 = numgb(N, M, i+1, j+1);
+        TRG[i][0].n[0] = i + 1;//numgb(N, M, i+1, j);
+        TRG[i][0].n[1] = i;//numgb(N, M, i,   j);        //T-
+        TRG[i][0].n[2] = i + 1 + N;//numgb(N, M, i+1, j+1);
 
-        TRG[i][j][1].n1 = numgb(N, M, i, j+1);
-        TRG[i][j][1].n2 = numgb(N, M, i+1, j +1);     //T+
-        TRG[i][j][1].n3 = numgb(N, M, i,   j);
+        TRG[i][1].n[0] = i + N + 1;//numgb(N, M, i, j+1);
+        TRG[i][1].n[1] = i + 1 + N;//numgb(N, M, i+1, j +1);     //T+
+        TRG[i][1].n[2] = i;//numgb(N, M, i,   j);
 
       }
       else      //index pair
       {
-        TRG[i][j][0].n1 = numgb(N, M, i,   j);
-        TRG[i][j][0].n2 = numgb(N, M, i+1, j);        //T-
-        TRG[i][j][0].n3 = numgb(N, M, i, j+1);
+        TRG[i][0].n[0] = i;//numgb(N, M, i,   j);
+        TRG[i][0].n[1] = i + 1;//numgb(N, M, i+1, j);        //T-
+        TRG[i][0].n[2] = i + N;//numgb(N, M, i, j+1);
 
-        TRG[i][j][1].n1 = numgb(N, M, i+1,j+1);
-        TRG[i][j][1].n2 = numgb(N, M, i,  j+1);       //T+
-        TRG[i][j][1].n3 = numgb(N, M, i+1,  j);
+        TRG[i][1].n[0] = i + 1 + N;//numgb(N, M, i+1,j+1);
+        TRG[i][1].n[1] = i + N;//numgb(N, M, i,  j+1);       //T+
+        TRG[i][1].n[2] = i + 1;//numgb(N, M, i+1,  j);
       }
-    }
   }
   return TRG;
 }
@@ -218,11 +213,6 @@ std::vector<std::vector<u64>> Maillage :: GradGrad(std::vector<u64> xs, std::vec
     }
   }
 
-
-
-
-
-
   return GrdGrd;
 }
 
@@ -248,15 +238,16 @@ return res;
 
 //-------------------------------------------------------//
 //                   Probleme discret                    //
-std::vector<double>  Maillage ::  extendVec ( u64 N, u64 M ,std::vector<double> v, std::vector<u64> k_int)
+std::vector<double>  Maillage ::  extendVec ( u64 N, u64 M ,std::vector<double> v)
 {
   std::vector<double> v_tild(N * M);
 
   for (int i = 0; i < v.size(); i++) {
-    v_tild[num_int_gb(N,M,k_int[i])] = v[i];
+    v_tild[num_int_gb(N,M,i)] = v[i];
   }
   return v_tild;
 }
+
 std::vector<double> Maillage :: IntVec(u64 N,u64 M, std::vector<double> w, std::vector<u64> &k_int)
 {
   std::vector<double> v ((N-2) * (M-2));
@@ -270,6 +261,24 @@ std::vector<double> Maillage :: IntVec(u64 N,u64 M, std::vector<double> w, std::
   }
   return v;
 }
+
+std::vector<double> Maillage :: matvec(std::vector<double> v,u64 N, u64 M)
+{
+  std::vector<double> vv = extendVec(N,M,v);
+  std::vector<double> W(N * M);
+  std::vector<double> xs(3);
+  std::vector<double> ys(3);
+  u64 K = N * M;
+  std::vector<std::vector<Triangle>> TRG = maillageTR(N,M);
+  for (u64 t = 0; t < K; t++) {
+    for (int type_trig = 0; type_trig < 2; type_trig++) {
+      
+    }
+  }
+
+  return W;
+}
+
 
 
 

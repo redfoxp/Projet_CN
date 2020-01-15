@@ -30,7 +30,7 @@ public:
 
     //-------------------------------------------------------//
     //                    Triangulation                      //
-    std::vector< std::vector<std::vector<Triangle>>> maillageTR(u64 N, u64 M);
+    std::vector<std::vector<Triangle>> maillageTR(u64 N, u64 M);
     std::vector<std::vector<u64>> CalcMatBT(std::vector<u64> xs, std::vector<u64> ys);
 
     //-------------------------------------------------------//
@@ -40,8 +40,9 @@ public:
 
     //-------------------------------------------------------//
     //                   Probleme discret                    //
-    std::vector<double> extendVec ( u64 N, u64 M ,std::vector<double> v, std::vector<u64> k_int);
+    std::vector<double> extendVec ( u64 N, u64 M ,std::vector<double> v);
     std::vector<double> IntVec(u64 N,u64 M, std::vector<double> w, std::vector<u64> &k_int);
+    std::vector<double> matvec(std::vector<double> v,u64 N, u64 M);
 
     //-------------------------------------------------------//
     //                      Affichage                        //

@@ -3,15 +3,14 @@
 #include "types.h"
 class Triangle {
 public:
-  u64 n1;
-  u64 n2;
-  u64 n3;
+  std::vector<u64> n;
 
   Triangle ()
   {
-    n1 = 0;
-    n2 = 0;
-    n3 = 0;
+    n.resize(3);
+    n[0] = 0;
+    n[1] = 0;
+    n[2] = 0;
   }
   ~Triangle (){}
 };

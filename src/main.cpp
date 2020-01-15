@@ -39,27 +39,20 @@ std::cout << "interieur " << test_pos_int << " global    : "<< m.num_int_gb(N,M,
 
 std::cout << "global    " << test_pos_gb  << " interieur : " << m.num_gb_int(N,M,test_pos_gb)<<'\n';
 
-u64 index_trg_i = 2;
-u64 index_trg_j = 2;
+u64 index_trg = 2;
 
-std::vector<Triangle> trig = m.maillageTR(N,M)[index_trg_i][index_trg_j];
+std::vector<Triangle> trig = m.maillageTR(N,M)[index_trg];
 
-std::cerr << "TRG i = "<< index_trg_i << " j = "<< index_trg_j << " coordonees : Global " << '\n' <<
-      "                T-      n1 :   " << trig[0].n1 <<'\n' <<
-      "                        n2 :   " << trig[0].n2 << '\n' <<
-      "                        n3 :   " << trig[0].n3 << '\n' <<
-      "                T+      n1 :   " << trig[1].n1 <<'\n' <<
-      "                        n2 :   " << trig[1].n2 << '\n' <<
-      "                        n3 :   " << trig[1].n3 << '\n';
+std::cerr << "TRG  = "<< index_trg<< " coordonees : Global " << '\n' <<
+      "                T-      n1 :   " << trig[0].n[0] << '\n' <<
+      "                        n2 :   " << trig[0].n[1] << '\n' <<
+      "                        n3 :   " << trig[0].n[2] << '\n' <<
+      "                T+      n1 :   " << trig[1].n[0] << '\n' <<
+      "                        n2 :   " << trig[1].n[1] << '\n' <<
+      "                        n3 :   " << trig[1].n[2] << '\n';
 
 // TEST ajout valeurs a la matrice
 std::vector<double> v (5);
-std::vector<u64> k_int (5);
-k_int[0] = 42;
-k_int[1] = 43;
-k_int[2] = 44;
-k_int[3] = 45;
-k_int[4] = 46;
 
 v[0] = 0.2;
 v[1] = 0.21;
@@ -67,7 +60,7 @@ v[2] = 0.3;
 v[3] = 0.31;
 v[4] = 0.4;
 
-std::vector<double> Global_vec = m.extendVec(N,M,v,k_int);
+std::vector<double> Global_vec = m.extendVec(N,M,v);
 m.print_values_global_matrix(N,M,Global_vec);
 
 std::vector<u64> k_index;

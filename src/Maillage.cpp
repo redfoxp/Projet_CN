@@ -272,6 +272,7 @@ std::vector<double> Maillage :: matvec(std::vector<double> v,u64 N, u64 M)
 
       for (int a = 0; a < 3; a++) {
         s = TRG[t][type_trig].n[a];
+        if (s < N*M) {
         res = 0;
         for (int b = 0; b < 3; b++) {
           r = TRG[t][type_trig].n[b];
@@ -280,16 +281,14 @@ std::vector<double> Maillage :: matvec(std::vector<double> v,u64 N, u64 M)
           res = res + vv[r] * GRAD2;
         }
         ww[s] = ww[s] + res;
+        }
       }
     }
   }
-
   std::vector<double> w(N*M);
   std::vector<u64> k_int;
   w = IntVec(N, M, ww, k_int);
-  for (size_t i = 0; i < ww.size(); i++) {
-    std::cout << ww[i] << " ";
-  }
+
   return w;
 }
 

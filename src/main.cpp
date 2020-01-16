@@ -70,7 +70,7 @@ m.print_values_int_matrix(N,M,Int_vec,k_index);
 //      TEST MAT VEC
 
 std::vector<double> Global_matvec = m.matvec(Int_vec,N,M);
-//m.print_values_global_matrix(N,M,Global_matvec);
+m.print_values_global_matrix(N,M,Global_matvec);
 
 //-----------------------------------------------------------//
 //                          AFFICHAGE
